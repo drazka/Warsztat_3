@@ -1,4 +1,7 @@
-package pl.coderslab;
+package pl.coderslab.controller;
+
+import pl.coderslab.model.Solution;
+import pl.coderslab.model.UserGroup;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -6,21 +9,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
+import java.util.List;
 
-@WebServlet(name = "ServletTest", urlPatterns = "/test")
-public class ServletTest extends HttpServlet {
+@WebServlet(name = "GroupsServlet", urlPatterns = "/allGroup")
+public class GroupsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            Connection conn = DbUtil.getConn();
-            conn.prepareStatement("SELECT * FROM users").executeQuery();
-            response.getWriter().append("dziala");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<UserGroup> userGroups =UserGroup.loadAll();
+        request.setAttribute("userGroups", userGroups);
+        getServletContext().getRequestDispatcher("/WEB-INF/groups.jsp")
+                .forward(request, response);
     }
 }
